@@ -1,0 +1,85 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environment
+.venv/
+venv/
+ENV/
+env/
+
+# uv
+.ipython/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Test files
+test_project.chroma/
+test_*.zip
+test_*.md
+test_*.py
+test_*.txt
+*.test
+*.tmp
+*.bak
+*.backup
+
+# ChromaDB
+*.chroma/
+chroma.sqlite3
+__pycache__/
+*.log
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# pytest
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Model cache
+sentence_transformers/
+models/
+.cache/
+.huggingface/
+.transformers_cache/
+
+# old_src (reference implementation)
+old_src/
