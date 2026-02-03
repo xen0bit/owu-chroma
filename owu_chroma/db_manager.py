@@ -53,12 +53,20 @@ class LocalDBManager:
         ids = []
         documents = []
         metadatas = []
+        chunk_counter = {}
 
-        for chunk in chunks:
+        for idx, chunk in enumerate(chunks):
             content_hash = hashlib.md5(
                 chunk["content"].encode('utf-8')
             ).hexdigest()[:16]
-            unique_id = f"{chunk['source_file'].replace('/', '_')}_{content_hash}"
+            
+            source_file = chunk['source_file'].replace('/', '_')
+            
+            if source_file not in chunk_counter:
+                chunk_counter[source_file] = 0
+            chunk_counter[source_file] += 1
+            
+            unique_id = f"{source_file}_{content_hash}_{chunk_counter[source_file]}"
 
             ids.append(unique_id)
             documents.append(chunk["content"])
