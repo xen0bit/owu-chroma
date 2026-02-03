@@ -12,80 +12,11 @@ from .embedder import Embedder
 from .db_manager import LocalDBManager
 from .sync_manager import RemoteSyncManager
 
-app = typer.Typer(add_completion=False, help="Create and sync ChromaDB from ZIP files")
+app = typer.Typer(invoke_without_command=True, no_args_is_help=False, add_completion=False, help="Create and sync ChromaDB from ZIP files")
 console = Console()
 
 
-@app.command("reset")
-def reset(
-    name: str = typer.Option(
-        ...,
-        "--name",
-        "-n",
-        help="Collection name to delete",
-    ),
-    remote_host: str = typer.Option(
-        "127.0.0.1",
-        "--remote-host",
-        help="Remote ChromaDB host (default: 127.0.0.1)",
-    ),
-    remote_port: int = typer.Option(
-        8080,
-        "--remote-port",
-        help="Remote ChromaDB port (default: 8080)",
-    ),
-    remote_tenant: Optional[str] = typer.Option(
-        None,
-        "--remote-tenant",
-        help="Remote ChromaDB tenant (optional)",
-    ),
-    remote_database: Optional[str] = typer.Option(
-        None,
-        "--remote-database",
-        help="Remote ChromaDB database (optional)",
-    ),
-    api_key: Optional[str] = typer.Option(
-        None,
-        "--api-key",
-        help="API key for remote ChromaDB (optional)",
-    ),
-    verbose: bool = typer.Option(
-        False,
-        "--verbose",
-        "-v",
-        help="Show detailed progress",
-    ),
-):
-    """
-    Delete a collection from the remote ChromaDB server.
-
-    This will permanently remove the specified collection and all its data.
-    Use with caution!
-    """
-    console.print(f"🗑️  Resetting collection '{name}' on remote ChromaDB...")
-    console.print(f"🌐 Remote: {remote_host}:{remote_port}")
-    console.print()
-
-    sync_manager = RemoteSyncManager(
-        host=remote_host,
-        port=remote_port,
-        tenant=remote_tenant,
-        database=remote_database,
-        api_key=api_key,
-        verbose=verbose,
-    )
-
-    success = sync_manager.delete_collection(name)
-
-    if success:
-        console.print()
-        console.print("✅ Reset completed successfully!", style="bold green")
-    else:
-        console.print()
-        console.print("⚠️  Reset failed or collection not found.", style="yellow")
-
-
-@app.command()
+@app.command(no_args_is_help=False)
 def main(
     zip_file: Path = typer.Argument(
         ...,

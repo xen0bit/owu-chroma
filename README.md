@@ -50,14 +50,6 @@ uvx owu-chroma myproject.zip \
   --verbose
 ```
 
-### Reset Collection
-
-Delete a collection from the remote ChromaDB server:
-
-```bash
-uvx owu-chroma reset --name mydb --remote-host 192.168.1.100
-```
-
 ## Commands
 
 ### `uvx owu-chroma <zip-file>`
@@ -82,19 +74,6 @@ Main command to process ZIP files and create/sync vector databases.
 - `--reset-remote, -r` - Reset remote collection (delete and recreate)
 - `--reset-all, -R` - Delete ALL collections on remote server before syncing
 - `--cpu, -c` - Force CPU usage for embeddings (default: auto-detect)
-
-### `uvx owu-chroma reset`
-
-Delete a collection from the remote ChromaDB server.
-
-**Options:**
-- `--name, -n` - Collection name to delete (required)
-- `--remote-host` - Remote ChromaDB host (default: 127.0.0.1)
-- `--remote-port` - Remote ChromaDB port (default: 8080)
-- `--remote-tenant` - Remote ChromaDB tenant (optional)
-- `--remote-database` - Remote ChromaDB database (optional)
-- `--api-key` - API key for remote ChromaDB (optional)
-- `--verbose, -v` - Show detailed progress
 
 ## Dependencies
 
