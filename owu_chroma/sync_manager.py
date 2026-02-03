@@ -63,12 +63,17 @@ class RemoteSyncManager:
             return False
 
     def collection_exists(self, collection_name: str) -> bool:
+        if not self.client:
+            return False
         try:
             collections = self.client.list_collections()
             if self.verbose:
                 existing_names = [coll.name for coll in collections]
                 console.print(f"  Collections on remote: {existing_names}")
+                console.print(f"  Looking for: '{collection_name}'")
             exists = any(coll.name == collection_name for coll in collections)
+            if self.verbose:
+                console.print(f"  Collection exists: {exists}")
             return exists
         except Exception as e:
             if self.verbose:
@@ -141,9 +146,18 @@ class RemoteSyncManager:
         metadata: Optional[Dict] = None,
         reset_remote: bool = False,
     ) -> bool:
+        if self.verbose:
+            console.print(f"  [DEBUG] sync_collection called with collection_name: '{collection_name}'")
+            console.print(f"  [DEBUG] reset_remote: {reset_remote}")
+            console.print(f"  [DEBUG] local_data keys: {list(local_data.keys()) if local_data else 'None'}")
+
         if not self.client:
             if not self.connect():
                 return False
+
+        if not collection_name:
+            console.print("❌ Error: collection_name is empty", style="red")
+            return False
 
         collection_exists = self.collection_exists(collection_name)
 
@@ -151,8 +165,8 @@ class RemoteSyncManager:
             if reset_remote:
                 self.client.delete_collection(collection_name)
                 console.print(f"🗑️  Reset: deleted old collection '{collection_name}'", style="yellow")
-                
-                max_retries = 10
+
+                max_retries = 20
                 for attempt in range(max_retries):
                     time.sleep(0.5)
                     if not self.collection_exists(collection_name):
@@ -161,12 +175,16 @@ class RemoteSyncManager:
                         break
                     if attempt < max_retries - 1 and self.verbose:
                         console.print(f"  Waiting for deletion... (attempt {attempt + 1}/{max_retries})")
-                
+
                 if self.collection_exists(collection_name):
                     console.print(f"⚠️  Warning: Collection '{collection_name}' still exists after deletion attempts", style="yellow")
-                
+
                 collection_exists = False
                 action = "overwrite"
+
+                time.sleep(1)
+                if self.verbose:
+                    console.print("  Giving ChromaDB a moment to finalize deletion...", style="yellow")
             else:
                 action = self.handle_conflict(collection_name, local_data)
 
@@ -188,6 +206,9 @@ class RemoteSyncManager:
                 collection_metadata = {k: v for k, v in collection_metadata.items() if v is not None}
 
             if not collection_exists or action == "overwrite":
+                if self.verbose:
+                    console.print(f"  [DEBUG] Creating collection with name: '{collection_name}'")
+                    console.print(f"  [DEBUG] Metadata: {collection_metadata}")
                 collection = self.client.create_collection(
                     name=collection_name,
                     metadata=collection_metadata
@@ -244,6 +265,9 @@ class RemoteSyncManager:
 
         except Exception as e:
             console.print(f"❌ Error syncing collection '{collection_name}': {e}", style="red")
+            if self.verbose:
+                import traceback
+                console.print(traceback.format_exc(), style="red")
             return False
 
     def delete_all_collections(self) -> int:

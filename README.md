@@ -50,6 +50,16 @@ uvx owu-chroma myproject.zip \
   --verbose
 ```
 
+### Remote-Only Mode
+
+Insert directly to remote ChromaDB without creating a local database (faster):
+
+```bash
+uvx owu-chroma myproject.zip --remote-only
+```
+
+This skips local database creation and immediately syncs to the remote server, saving time by avoiding double insertion. Useful for production workflows where local storage isn't needed.
+
 ## Commands
 
 ### `uvx owu-chroma <zip-file>`
@@ -74,6 +84,7 @@ Main command to process ZIP files and create/sync vector databases.
 - `--reset-remote, -r` - Reset remote collection (delete and recreate)
 - `--reset-all, -R` - Delete ALL collections on remote server before syncing
 - `--cpu, -c` - Force CPU usage for embeddings (default: auto-detect)
+- `--remote-only` - Insert directly to remote without creating local database
 
 ## Dependencies
 
