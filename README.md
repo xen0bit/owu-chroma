@@ -13,16 +13,17 @@ Create and sync ChromaDB vector databases from ZIP files.
 
 ## Installation
 
+This project is managed with uv. Run it directly with uvx:
+
 ```bash
-pip install owu-chroma
+uvx owu-chroma myproject.zip
 ```
 
-Or from source:
+To install locally:
 
 ```bash
-git clone <repository-url>
-cd owu-chroma
-pip install -e .
+uv sync
+uv run owu-chroma myproject.zip
 ```
 
 ## Usage
@@ -32,13 +33,13 @@ pip install -e .
 Process a ZIP file and create a vector database:
 
 ```bash
-owu-chroma myproject.zip
+uvx owu-chroma myproject.zip
 ```
 
 ### Advanced Options
 
 ```bash
-owu-chroma myproject.zip \
+uvx owu-chroma myproject.zip \
   --name mydb \
   --chunk-size 1000 \
   --chunk-overlap 100 \
@@ -54,12 +55,12 @@ owu-chroma myproject.zip \
 Delete a collection from the remote ChromaDB server:
 
 ```bash
-owu-chroma reset --name mydb --remote-host 192.168.1.100
+uvx owu-chroma reset --name mydb --remote-host 192.168.1.100
 ```
 
 ## Commands
 
-### `owu-chroma <zip-file>`
+### `uvx owu-chroma <zip-file>`
 
 Main command to process ZIP files and create/sync vector databases.
 
@@ -82,7 +83,7 @@ Main command to process ZIP files and create/sync vector databases.
 - `--reset-all, -R` - Delete ALL collections on remote server before syncing
 - `--cpu, -c` - Force CPU usage for embeddings (default: auto-detect)
 
-### `owu-chroma reset`
+### `uvx owu-chroma reset`
 
 Delete a collection from the remote ChromaDB server.
 
@@ -97,6 +98,7 @@ Delete a collection from the remote ChromaDB server.
 
 ## Dependencies
 
+- uv (Python package manager)
 - chromadb>=0.5.0
 - sentence-transformers>=3.0.0
 - typer>=0.12.0
